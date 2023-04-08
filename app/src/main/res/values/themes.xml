@@ -1,0 +1,62 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.AniBrowse" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/maastricht_blue</item>
+        <item name="colorPrimaryVariant">@color/regal_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/alice_blue</item>
+        <item name="colorSecondaryVariant">@color/alice_blue</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorSecondary</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Customize your theme here. -->
+        <item name="colorControlNormal">?attr/colorOnSecondary</item>
+        <item name="android:windowBackground">@color/alice_blue</item>
+        <item name="fontFamily">@font/sailec</item>
+    </style>
+
+    <style name="Theme.AniBrowse.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Theme.AniBrowse.Toolbar">
+        <item name="android:fontFamily">@font/sailec</item>
+        <item name="android:background">?attr/colorSecondary</item>
+        <item name="titleTextColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.AniBrowse.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="InvertedButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">?attr/colorOnPrimary</item>
+        <item name="iconTint">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Subtitle1 -->
+    <style name="TextAppearance.AniBrowse.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.009375</item>
+    </style>
+
+    <style name="Theme.AniBrowse.Subtitle1">
+        <item name="android:textAppearance">@style/TextAppearance.AniBrowse.Subtitle1</item>
+        <item name="firstBaselineToTopHeight">20sp</item>
+        <item name="lastBaselineToBottomHeight">8sp</item>
+    </style>
+    <!-- Subtitle1 -->
+
+    <style name="ShapeAppearanceOverlay.MyApp.Button.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+</resources>

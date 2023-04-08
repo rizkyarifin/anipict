@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="id.rizky.anipict.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_photosFragment"
+            app:destination="@id/navigation_photos" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_favourites"
+        android:name="id.rizky.anipict.ui.favorites.FavoritesFragment"
+        android:label="@string/title_favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/navigation_photos"
+        android:name="id.rizky.anipict.ui.photos.PhotosFragment"
+        android:label="PhotosFragment" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+</navigation>
