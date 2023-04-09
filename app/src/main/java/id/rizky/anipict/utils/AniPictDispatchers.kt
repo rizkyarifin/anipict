@@ -4,8 +4,8 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Dispatcher(val aniBrowseDispatchers: AniBrowseDispatchers)
+annotation class Dispatcher(val aniPictDispatchers: AniPictDispatchers)
 
-enum class AniBrowseDispatchers {
+enum class AniPictDispatchers {
     IO
 }

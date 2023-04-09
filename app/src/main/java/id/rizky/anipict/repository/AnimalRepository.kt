@@ -2,7 +2,7 @@ package id.rizky.anipict.repository
 
 import id.rizky.anipict.data.network.AnimalService
 import id.rizky.anipict.data.network.mapper.mapToFilterModel
-import id.rizky.anipict.utils.AniBrowseDispatchers
+import id.rizky.anipict.utils.AniPictDispatchers
 import id.rizky.anipict.utils.Dispatcher
 import id.rizky.anipict.utils.FilterAnimalAdapter
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class AnimalRepository @Inject constructor(
     private val animalService: AnimalService,
-    @Dispatcher(AniBrowseDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(AniPictDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) {
 
     fun getAnimals(

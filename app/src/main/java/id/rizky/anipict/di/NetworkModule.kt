@@ -44,32 +44,36 @@ internal object NetworkModule {
     @Provides
     @Singleton
     @Named("Pexel")
-    fun providePexelsRetrofit(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(PEXEL_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+    fun providePexelsRetrofit(okHttpClient: OkHttpClient): Retrofit = retrofitFactory(
+        PEXEL_BASE_URL, okHttpClient
+    )
 
     @Provides
     @Singleton
     @Named("Animal")
-    fun provideNinjasRetrofit(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(NINJAS_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+    fun provideNinjasRetrofit(okHttpClient: OkHttpClient): Retrofit = retrofitFactory(
+        NINJAS_BASE_URL, okHttpClient
+    )
 
     @Provides
     @Singleton
     fun providePhotoService(
-        @Named("Pexel") retrofit: Retrofit): PhotoService =
+        @Named("Pexel") retrofit: Retrofit
+    ): PhotoService =
         retrofit.create(PhotoService::class.java)
 
     @Provides
     @Singleton
     fun provideAnimalService(
-        @Named("Animal") retrofit: Retrofit): AnimalService =
+        @Named("Animal") retrofit: Retrofit
+    ): AnimalService =
         retrofit.create(AnimalService::class.java)
+
+    private fun retrofitFactory(baseUrl: String, okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+
 }
