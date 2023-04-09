@@ -13,7 +13,7 @@ import id.rizky.anipict.utils.loadGridPhotoUrl
 import id.rizky.anipict.utils.setImageDimensionRatio
 
 class PhotoAdapter(
-    private val listener: OnItemClickListener
+    private val listener: OnClickListener
 ) : PagingDataAdapter<Photo, PhotoAdapter.GalleryViewHolder>(PhotoDiffCallback()) {
 
     inner class GalleryViewHolder(
@@ -71,7 +71,7 @@ class PhotoAdapter(
         }
     }
 
-    interface OnItemClickListener {
+    interface OnClickListener {
         fun onClickPhotoOrFavoriteButton(photo: Photo)
     }
 

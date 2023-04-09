@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class HomeViewModel : ViewModel() {
 
-    private val _animalData =
+    private val _animalDataFlow =
         MutableStateFlow<List<AnimalAdapter.Animal>>(mutableListOf<AnimalAdapter.Animal>().apply {
             add(AnimalAdapter.Animal("Elephant", "Mammalia", R.mipmap.elephant))
             add(AnimalAdapter.Animal("Lion", "Mammalia", R.mipmap.lion))
@@ -20,5 +20,5 @@ class HomeViewModel : ViewModel() {
             add(AnimalAdapter.Animal("Penguin", "Aves", R.mipmap.penguin))
         })
 
-    val animalData: StateFlow<List<AnimalAdapter.Animal>> = _animalData
+    val animalDataFlow: StateFlow<List<AnimalAdapter.Animal>> = _animalDataFlow
 }

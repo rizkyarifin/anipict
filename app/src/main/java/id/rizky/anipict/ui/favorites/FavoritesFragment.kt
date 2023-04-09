@@ -47,25 +47,28 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorite),
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    viewModel.favoritePhotoFlow.collectLatest {
-                        if (it.isEmpty()) {
-                            binding.tvEmptyState.visibility = View.VISIBLE
-                            binding.rvFavorite.visibility = View.GONE
-                        } else {
-                            binding.tvEmptyState.visibility = View.GONE
-                            binding.rvFavorite.visibility = View.VISIBLE
-                        }
-
+                    viewModel.favoritePhotosFlow.collectLatest {
+                        showEmptyState(it)
                         favouritesPhotoAdapter.differ.submitList(it)
                     }
                 }
 
                 launch {
-                    viewModel.filterData.collectLatest {
+                    viewModel.filterDataFlow.collectLatest {
                         filterAnimalAdapter.differ.submitList(it)
                     }
                 }
             }
+        }
+    }
+
+    private fun showEmptyState(listPhoto : List<Photo>) {
+        if (listPhoto.isEmpty()) {
+            binding.tvEmptyState.visibility = View.VISIBLE
+            binding.rvFavorite.visibility = View.GONE
+        } else {
+            binding.tvEmptyState.visibility = View.GONE
+            binding.rvFavorite.visibility = View.VISIBLE
         }
     }
 
@@ -85,8 +88,8 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorite),
     }
 
     override fun onItemClickListener(position: Int) {
-        viewModel.applyFilter(position)
         (binding.rvFavorite.layoutManager as LinearLayoutManager)
             .scrollToPositionWithOffset(0, 0)
+        viewModel.applyFilter(position)
     }
 }

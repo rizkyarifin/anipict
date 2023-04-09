@@ -25,7 +25,7 @@ class PhotosViewModel @AssistedInject constructor(
     @Assisted private val query: String,
 ) : ViewModel() {
 
-    private val _filterData: MutableStateFlow<List<FilterAnimalAdapter.Filter>> = MutableStateFlow(
+    private val _filterDataFlow: MutableStateFlow<List<FilterAnimalAdapter.Filter>> = MutableStateFlow(
         arrayListOf()
     )
 
@@ -46,10 +46,10 @@ class PhotosViewModel @AssistedInject constructor(
     }, onComplete = {
     })
 
-    val filterData: Flow<List<FilterAnimalAdapter.Filter>> = _filterData
+    val filterDataFlow: Flow<List<FilterAnimalAdapter.Filter>> = _filterDataFlow
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val photosFlow = filterData.filter { it.isNotEmpty() }.flatMapLatest { filterData ->
+    val photosFlow = filterDataFlow.filter { it.isNotEmpty() }.flatMapLatest { filterData ->
         photoRepository.getPhotos(getActiveFilterQuery(filterData)).cachedIn(viewModelScope)
     }
 
@@ -61,7 +61,7 @@ class PhotosViewModel @AssistedInject constructor(
         job?.cancel()
         job = viewModelScope.launch {
             animalFlow.collect {
-                _filterData.emit(it)
+                _filterDataFlow.emit(it)
             }
         }
     }
@@ -70,11 +70,11 @@ class PhotosViewModel @AssistedInject constructor(
         if (filterData.isNotEmpty()) filterData.filter { it.isActive }[0].name else query
 
     fun applyFilter(position: Int) {
-        _filterData.value = _filterData.value.withSelectedValuesAtIndex(position)
+        _filterDataFlow.value = _filterDataFlow.value.withSelectedValuesAtIndex(position)
     }
 
     private fun addPhotoToFavorite(photo: Photo) = viewModelScope.launch {
-        favoritePhotoRepository.addPhotoToFavorite(photo, getActiveFilterQuery(_filterData.value))
+        favoritePhotoRepository.addPhotoToFavorite(photo, getActiveFilterQuery(_filterDataFlow.value))
     }
 
     private fun deletePhotoFromFavorite(id: Int) = viewModelScope.launch {

@@ -39,7 +39,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), AnimalAdapter.OnClickList
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.animalData.collectLatest {
+                viewModel.animalDataFlow.collectLatest {
                     animalAdapter.differ.submitList(it)
                 }
             }

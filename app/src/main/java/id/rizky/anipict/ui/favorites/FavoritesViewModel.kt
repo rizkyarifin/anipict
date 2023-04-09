@@ -9,6 +9,7 @@ import id.rizky.anipict.utils.withSelectedValuesAtIndex
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class FavoritesViewModel @Inject constructor(
     private val favoritePhotoRepository: FavoritePhotoRepository
 ) : ViewModel() {
 
-    private val _filterData =
+    private val _filterDataFlow =
         MutableStateFlow(mutableListOf<FilterAnimalAdapter.Filter>().apply {
             add(FilterAnimalAdapter.Filter("All", true))
             add(FilterAnimalAdapter.Filter("Elephant", false))
@@ -31,10 +32,10 @@ class FavoritesViewModel @Inject constructor(
             add(FilterAnimalAdapter.Filter("Penguin", false))
         })
 
-    val filterData: Flow<List<FilterAnimalAdapter.Filter>> = _filterData
+    val filterDataFlow: StateFlow<List<FilterAnimalAdapter.Filter>> = _filterDataFlow
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    var favoritePhotoFlow = filterData.flatMapLatest { filterData ->
+    var favoritePhotosFlow = filterDataFlow.flatMapLatest { filterData ->
         favoritePhotoRepository.getAllFavouritePhotos(getActiveFilterQuery(filterData))
     }
 
@@ -44,7 +45,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun applyFilter(position: Int) {
-        _filterData.value = _filterData.value.withSelectedValuesAtIndex(position)
+        _filterDataFlow.value = _filterDataFlow.value.withSelectedValuesAtIndex(position)
     }
 
     fun deletePhotoFromFavorite(id: Int) = viewModelScope.launch {

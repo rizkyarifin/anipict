@@ -1,7 +1,6 @@
 package id.rizky.anipict.ui.photos
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,12 +25,11 @@ import id.rizky.anipict.utils.FilterAnimalAdapter
 import id.rizky.anipict.utils.SpacingItemDecoration
 import id.rizky.anipict.utils.dpToPx
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnItemClickListener,
+class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnClickListener,
     FilterAnimalAdapter.OnClickListener {
 
     private var _binding: FragmentPhotosBinding? = null
@@ -120,7 +118,7 @@ class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnItemCl
                 }
 
                 launch {
-                    viewModel.filterData.collectLatest {
+                    viewModel.filterDataFlow.collectLatest {
                         filterAnimalAdapter.differ.submitList(it)
                     }
                 }
@@ -163,9 +161,8 @@ class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnItemCl
     }
 
     override fun onItemClickListener(position: Int) {
-        viewModel.applyFilter(position)
-
         (binding.rvPhoto.layoutManager as StaggeredGridLayoutManager)
             .scrollToPositionWithOffset(0, 0)
+        viewModel.applyFilter(position)
     }
 }
