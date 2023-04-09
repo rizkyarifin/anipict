@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import id.rizky.anipict.R
@@ -11,6 +14,8 @@ import id.rizky.anipict.databinding.FragmentHomeBinding
 import id.rizky.anipict.ui.home.adapter.AnimalAdapter
 import id.rizky.anipict.utils.SpacingItemDecoration
 import id.rizky.anipict.utils.dpToPx
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), AnimalAdapter.OnClickListener {
@@ -18,7 +23,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), AnimalAdapter.OnClickList
     private val animalAdapter by lazy {
         AnimalAdapter(this)
     }
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -32,8 +37,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), AnimalAdapter.OnClickList
     }
 
     private fun observeViewModel() {
-        homeViewModel.animalData.observe(viewLifecycleOwner) {
-            animalAdapter.differ.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.animalData.collectLatest {
+                    animalAdapter.differ.submitList(it)
+                }
+            }
         }
     }
 

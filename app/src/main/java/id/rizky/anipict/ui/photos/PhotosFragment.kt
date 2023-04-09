@@ -1,6 +1,7 @@
 package id.rizky.anipict.ui.photos
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -92,8 +93,7 @@ class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnItemCl
             rvPhoto.adapter = concatAdapter
             rvPhoto.addItemDecoration(SpacingItemDecoration(16.dpToPx(requireContext())))
             btnRetry.setOnClickListener {
-                viewModel.animalFlow.retry()
-                photosAdapter.retry()
+                viewModel.fetchAnimalData()
             }
         }
     }

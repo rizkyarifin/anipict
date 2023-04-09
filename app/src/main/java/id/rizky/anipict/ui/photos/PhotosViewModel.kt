@@ -13,6 +13,7 @@ import id.rizky.anipict.repository.PhotoRepository
 import id.rizky.anipict.utils.FilterAnimalAdapter
 import id.rizky.anipict.utils.withSelectedValuesAtIndex
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -34,10 +35,13 @@ class PhotosViewModel @AssistedInject constructor(
     private val _loadingAnimalChannel = Channel<Boolean>(Channel.CONFLATED)
     val loadingAnimalChannel = _loadingAnimalChannel.receiveAsFlow()
 
-    val animalFlow = animalRepository.getAnimals(query, onError = {
+    private var job: Job? = null
+
+    private val animalFlow = animalRepository.getAnimals(query, onError = {
         _loadingAnimalChannel.trySend(false)
         _errorAnimalChannel.trySend(true)
     }, onStart = {
+        _errorAnimalChannel.trySend(false)
         _loadingAnimalChannel.trySend(true)
     }, onComplete = {
     })
@@ -50,7 +54,12 @@ class PhotosViewModel @AssistedInject constructor(
     }
 
     init {
-        viewModelScope.launch {
+        fetchAnimalData()
+    }
+
+    fun fetchAnimalData() {
+        job?.cancel()
+        job = viewModelScope.launch {
             animalFlow.collect {
                 _filterData.emit(it)
             }

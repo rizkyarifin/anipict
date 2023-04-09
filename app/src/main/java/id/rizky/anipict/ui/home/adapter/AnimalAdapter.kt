@@ -67,7 +67,6 @@ class AnimalAdapter(
 
     }
 
-
     interface OnClickListener {
         fun onItemClickListener(animal: String)
     }

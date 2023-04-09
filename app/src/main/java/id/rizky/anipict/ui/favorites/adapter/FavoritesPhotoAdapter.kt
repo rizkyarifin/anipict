@@ -1,4 +1,4 @@
-package id.rizky.anipict.ui.favorites
+package id.rizky.anipict.ui.favorites.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

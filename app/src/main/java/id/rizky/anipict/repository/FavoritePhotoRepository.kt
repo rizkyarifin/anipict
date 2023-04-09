@@ -18,7 +18,6 @@ class FavoritePhotoRepository @Inject constructor(
     private val favouritePhotoDao: FavouritePhotoDao,
     @Dispatcher(AniBrowseDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) {
-
     fun getAllFavouritePhotos(animal: String): Flow<List<Photo>> =
         favouritePhotoDao.getAllFavouritePhotosByAnimal(animal).map { it.mapToPhotoDomain() }
             .flowOn(ioDispatcher)

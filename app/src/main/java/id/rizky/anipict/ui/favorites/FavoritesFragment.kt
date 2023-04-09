@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.rizky.anipict.R
 import id.rizky.anipict.data.model.Photo
 import id.rizky.anipict.databinding.FragmentFavoriteBinding
+import id.rizky.anipict.ui.favorites.adapter.FavoritesPhotoAdapter
 import id.rizky.anipict.utils.FilterAnimalAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
