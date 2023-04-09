@@ -35,8 +35,6 @@ class PhotosViewModel @AssistedInject constructor(
     private val _loadingAnimalChannel = Channel<Boolean>(Channel.CONFLATED)
     val loadingAnimalChannel = _loadingAnimalChannel.receiveAsFlow()
 
-    private var job: Job? = null
-
     private val animalFlow = animalRepository.getAnimals(query, onError = {
         _loadingAnimalChannel.trySend(false)
         _errorAnimalChannel.trySend(true)
@@ -46,7 +44,7 @@ class PhotosViewModel @AssistedInject constructor(
     }, onComplete = {
     })
 
-    val filterDataFlow: Flow<List<FilterAnimalAdapter.Filter>> = _filterDataFlow
+    val filterDataFlow: StateFlow<List<FilterAnimalAdapter.Filter>> = _filterDataFlow
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val photosFlow = filterDataFlow.filter { it.isNotEmpty() }.flatMapLatest { filterData ->
@@ -58,9 +56,8 @@ class PhotosViewModel @AssistedInject constructor(
     }
 
     fun fetchAnimalData() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            animalFlow.collect {
+        viewModelScope.launch {
+            animalFlow.collectLatest {
                 _filterDataFlow.emit(it)
             }
         }
