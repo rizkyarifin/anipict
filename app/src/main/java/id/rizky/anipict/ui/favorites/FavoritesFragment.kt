@@ -15,8 +15,10 @@ import id.rizky.anipict.data.model.Photo
 import id.rizky.anipict.databinding.FragmentFavoriteBinding
 import id.rizky.anipict.ui.favorites.adapter.FavoritesPhotoAdapter
 import id.rizky.anipict.utils.FilterAnimalAdapter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.fragment_favorite),
@@ -88,8 +90,11 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorite),
     }
 
     override fun onItemClickListener(position: Int) {
-        (binding.rvFavorite.layoutManager as LinearLayoutManager)
-            .scrollToPositionWithOffset(0, 0)
-        viewModel.applyFilter(position)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.applyFilter(position)
+            delay(100)
+            (binding.rvFavorite.layoutManager as LinearLayoutManager)
+                .scrollToPositionWithOffset(0, 0)
+        }
     }
 }

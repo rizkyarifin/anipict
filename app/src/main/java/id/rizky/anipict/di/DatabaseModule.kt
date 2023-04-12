@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import id.rizky.anipict.data.db.AniPict
+import id.rizky.anipict.data.db.AniPictDB
 import id.rizky.anipict.data.db.FavouritePhotoDao
 import id.rizky.anipict.data.db.TypeResponseConverters
 import javax.inject.Singleton
@@ -27,9 +27,9 @@ object DatabaseModule {
     fun provideAppDatabase(
         application: Application,
         typeConverter: TypeResponseConverters
-    ): AniPict {
+    ): AniPictDB {
         return Room
-            .databaseBuilder(application, AniPict::class.java, "anipict.db")
+            .databaseBuilder(application, AniPictDB::class.java, "anipict.db")
             .fallbackToDestructiveMigration()
             .addTypeConverter(typeConverter)
             .build()
@@ -37,7 +37,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideFavouritePhotoDao(appDatabase: AniPict): FavouritePhotoDao {
+    fun provideFavouritePhotoDao(appDatabase: AniPictDB): FavouritePhotoDao {
         return appDatabase.favouritePhotos()
     }
 }

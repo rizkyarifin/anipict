@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -91,7 +92,10 @@ class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnClickL
             rvPhoto.adapter = concatAdapter
             rvPhoto.addItemDecoration(SpacingItemDecoration(16.dpToPx(requireContext())))
             btnRetry.setOnClickListener {
-                viewModel.fetchAnimalData()
+                if (filterAnimalAdapter.differ.currentList.isEmpty())
+                    viewModel.retry()
+                else
+                    photosAdapter.retry()
             }
         }
     }
@@ -112,27 +116,37 @@ class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnClickL
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    viewModel.emptyPhotoEvents.collectLatest {
+                        photosAdapter.submitData(PagingData.empty())
+                    }
+                }
+
+                launch {
                     viewModel.photosFlow.collectLatest {
                         photosAdapter.submitData(it)
                     }
                 }
 
                 launch {
+                    viewModel.animalState.collect {
+                        when (it) {
+                            is PhotosViewModel.AnimalEvents.Error -> {
+                                binding.progressCircularLoading.isVisible = false
+                                binding.btnRetry.isVisible = true
+                                binding.tvErrorMessage.isVisible = true
+                            }
+                            is PhotosViewModel.AnimalEvents.Loading -> {
+                                binding.progressCircularLoading.isVisible = true
+                                binding.btnRetry.isVisible = false
+                                binding.tvErrorMessage.isVisible = false
+                            }
+                        }
+                    }
+                }
+
+                launch {
                     viewModel.filterDataFlow.collectLatest {
                         filterAnimalAdapter.differ.submitList(it)
-                    }
-                }
-
-                launch {
-                    viewModel.errorAnimalChannel.collectLatest {
-                        binding.btnRetry.isVisible = it
-                        binding.tvErrorMessage.isVisible = it
-                    }
-                }
-
-                launch {
-                    viewModel.loadingAnimalChannel.collectLatest {
-                        binding.progressCircularLoading.isVisible = it
                     }
                 }
             }
@@ -161,8 +175,6 @@ class PhotosFragment : Fragment(R.layout.fragment_photos), PhotoAdapter.OnClickL
     }
 
     override fun onItemClickListener(position: Int) {
-        (binding.rvPhoto.layoutManager as StaggeredGridLayoutManager)
-            .scrollToPositionWithOffset(0, 0)
         viewModel.applyFilter(position)
     }
 }

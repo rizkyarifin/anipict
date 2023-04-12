@@ -2,15 +2,13 @@ package id.rizky.anipict.ui.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.rizky.anipict.repository.FavoritePhotoRepository
 import id.rizky.anipict.utils.FilterAnimalAdapter
 import id.rizky.anipict.utils.withSelectedValuesAtIndex
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,10 +35,13 @@ class FavoritesViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     var favoritePhotosFlow = filterDataFlow.flatMapLatest { filterData ->
         favoritePhotoRepository.getAllFavouritePhotos(getActiveFilterQuery(filterData))
-    }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Lazily, emptyList()
+    )
 
     private fun getActiveFilterQuery(filterData: List<FilterAnimalAdapter.Filter>): String {
-        val query = filterData.filter { it.isActive }[0].name
+        val query = filterData.single { it.isActive }.name
         return if (query == "All") "" else query
     }
 

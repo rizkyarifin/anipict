@@ -14,9 +14,9 @@ import id.rizky.anipict.utils.setImageDimensionRatio
 
 class PhotoAdapter(
     private val listener: OnClickListener
-) : PagingDataAdapter<Photo, PhotoAdapter.GalleryViewHolder>(PhotoDiffCallback()) {
+) : PagingDataAdapter<Photo, PhotoAdapter.PhotoViewHolder>(PhotoDiffCallback()) {
 
-    inner class GalleryViewHolder(
+    inner class PhotoViewHolder(
         private val binding: ItemPhotoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -54,8 +54,8 @@ class PhotoAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
-        return GalleryViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
+        return PhotoViewHolder(
             ItemPhotoBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -64,7 +64,7 @@ class PhotoAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photo = getItem(position)
         if (photo != null) {
             holder.bind(photo)

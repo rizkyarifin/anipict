@@ -2,9 +2,11 @@ package id.rizky.anipict.repository
 
 import id.rizky.anipict.data.network.AnimalService
 import id.rizky.anipict.data.network.mapper.mapToFilterModel
+import id.rizky.anipict.ui.photos.PhotosViewModel
 import id.rizky.anipict.utils.AniPictDispatchers
 import id.rizky.anipict.utils.Dispatcher
 import id.rizky.anipict.utils.FilterAnimalAdapter
+import id.rizky.anipict.utils.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -17,17 +19,14 @@ class AnimalRepository @Inject constructor(
 ) {
 
     fun getAnimals(
-        animal: String,
-        onStart: () -> Unit,
-        onComplete: () -> Unit,
-        onError: (String?) -> Unit
-    ): Flow<List<FilterAnimalAdapter.Filter>> = flow {
+        animal: String
+    ): Flow<Resource<List<FilterAnimalAdapter.Filter>>> = flow {
         try {
             val response = animalService.getAnimals(animal)
-            emit(response.mapToFilterModel())
+            emit(Resource.Success(response.mapToFilterModel()))
         } catch (e: Exception) {
-            onError(e.message)
+            emit(Resource.Error(e.message.orEmpty()))
         }
-    }.onStart { onStart() }.onCompletion { onComplete() }.flowOn(ioDispatcher)
+    }.flowOn(ioDispatcher)
 
 }
